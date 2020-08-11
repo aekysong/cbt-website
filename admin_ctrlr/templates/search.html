@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <div class="container">
+        <div class="page-header">
+            <h1>시험명에 '{{ q }}'을(를) 포함한 시험입니다</h1>
+        </div>
+        {% for result in qs %}
+        <div class="test">
+            <table class="test_table">
+                <tr>
+                    <th class="test_title" rowspan="3"><a class="test_table_title" href="{% url 'test_detail' pk=result.pk %}">{{ result.title }}</a></th>
+                    <th class="test_attribute"><strong>출제자 </strong></th>
+                    <th class="test_attribute"><strong>시험 시간 </strong></th>
+                    <th class="test_attribute"><strong>총점 </strong></th>
+                </tr>
+                <tr>
+                    <td>{{ result.professor }}</td>
+                    <td>{{ result.test_time }}</td>
+                    <td>{{ result.total_score }}점</td>
+                </tr>
+
+            </table>
+        </div>
+        {% endfor %}
+    </div>
+{% endblock %}

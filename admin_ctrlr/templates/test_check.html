@@ -1,0 +1,68 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+    <div class="container">
+        <h3>{{ test.title }}</h3>
+        <hr>
+        <p><strong>출제자 </strong>{{ test.professor }} <br>
+            <strong>시험 시간 </strong>{{ test.test_time }} <br>
+            <strong>시험 진행 시간 </strong>{{ test.test_period }} <br>
+            <strong>총점 </strong>{{ test.total_score }} 점</p><br>
+        <h3>{{ user.username }} 님의 결과</h3>
+        {% if test.auto_score %} <p>자동 채점 결과는 다음과 같습니다.</p>
+
+        {% else %} <p>수동 채점 결과는 다음과 같습니다.</p>
+
+        {% endif %}
+        <div class="questions">
+            <table style="border 1px">
+                <tr>
+                    <th>시험명</th>
+                    <th>문제번호</th>
+                    <th>배점</th>
+                    <th>문제</th>
+                    <th>답변</th>
+                    <th>정답</th>
+                    <th>정답 유무</th>
+                </tr>
+                {% for qu in question %}
+                    <tr>
+                        <td>{{qu.test_id}}</td>
+                        <td>{{qu.id}}</td>
+                        <td>{{qu.question_score}}</td>
+                        <td>{{qu.question_content}}</td>
+                        <td>{{qu.std_ans}}</td>
+                        <td>{{qu.ans}}</td>
+                        <td>
+                            {% if qu.std_ans == qu.ans %}
+                                O
+                            {% else %}
+                                X
+                            {% endif %}
+                        </td>
+                    </tr>
+                {% endfor %}
+                <p>획득한 점수 : {{count}}</p>
+            </table>
+        </div>
+
+
+    </div>
+    <style>
+        table {
+            width: 100%;
+            border: 1px solid #444444;
+            border-collapse: collapse;
+            margin-left: auto; margin-right: auto;
+            text-align: center;
+
+        }
+        th, td {
+            margin-left: auto; margin-right: auto;
+            border: 1px solid #444444;
+            text-align: center;
+        }
+    </style>
+{% endblock %}
+

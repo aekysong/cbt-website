@@ -1,0 +1,82 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Online Examination Website</title>
+    <!-- 합쳐지고 최소화된 최신 CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
+
+    <!-- 부가적인 테마 -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap-theme.min.css">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+
+
+
+</head>
+
+<body>
+<nav class="navbar navbar-default" id="mainNav">
+    <div class="container" id="topnav">
+        <a class="navbar-brand" href="/">Online Examination Website</a>
+
+        {% if user.is_authenticated %}
+            <p class="navbar-text navbar-right">{{ user.profile.type }} | {{ user.username }}님 반갑습니다.</p>
+            <p class="navbar-text navbar-right"><a href="{% url 'logout' %}" class="navbar-link">로그아웃하기</a></p>
+
+            {% if user.profile.type == "professor" or user.profile.type == "PRF" %}
+                <p class="navbar-text navbar-right"><a href="{% url 'create_test' %}" class="navbar-link">시험 생성하기</a></p>
+            {% endif %}
+
+            {% if user.profile.type == "manager" or user.profile.type == "MGR" %}
+                <p class="navbar-text navbar-right"><a href="{% url 'manage_users' %}" class="navbar-link">이용자 관리하기</a></p>
+            {% endif %}
+
+        {% else %}
+            <p class="navbar-text navbar-right"><a href="{% url 'login' %}" class="navbar-link">로그인하기</a></p>
+            <p class="navbar-text navbar-right"><a href="{% url 'signup' %}" class="navbar-link">회원가입</a></p>
+        {% endif %}
+    </div>
+</nav>
+
+<div class="out">
+  <div class="in">
+
+{% block content %}
+{% endblock %}
+
+  </div>
+</div>
+<footer>
+    <div class="footer" id="footer">
+        <div class="out">
+            <div class="in">
+                <div class="fmember"><h4> Online Examination Website </h4></div>
+                <div class="fmember"><h3> Team Member </h3></div>
+                <div class="fmember"><h5> 송예균 <h5></div>
+                <div class="fmember"><h5> 김용훈 <h5></div>
+                <div class="fmember"><h5> 전형준 <h5></div>
+                <div class="fmember"><h5> 서범수 <h5></div>
+                <div class="fmember"><h5> 유대청 <h5></div>
+            </div>
+            <!--/.row-->
+        </div>
+        <!--/.container-->
+    </div>
+    <!--/.footer-->
+
+    <div class="footer-bottom">
+        <div class="fcontainer">
+            <p class="pull-left copyright"> SKKU Web programming 42 </p>
+        </div>
+    </div>
+    <!--/.footer-bottom-->
+
+</footer>
+
+
+</body>
+
+
+</html>

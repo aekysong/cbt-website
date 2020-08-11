@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+{##}
+{#{% block content %}#}
+{#    <div class="container">#}
+{#        <div class="page-header">#}
+{#            <h1>로그인</h1>#}
+{#        </div>#}
+{##}
+{#        <form action="{% url 'login' %}" method="POST">#}
+{#            {% csrf_token %}#}
+{#            ID <input name="username" type="text"><br>#}
+{#            Password <input name="password" type="password"><br>#}
+{#            <input type="submit" value="로그인">#}
+{#        </form>#}
+{##}
+{#        {% if error %}#}
+{#            {{ error }}#}
+{#        {% endif %}#}
+{#    </div>#}
+{#{% endblock %}#}
+
+{% block content %}
+    <div class="container">
+        <div class="page-header">
+            <h1>로그인</h1>
+        </div>
+        <div class="out">
+          <div id="loginBox" class="in">
+            <form action="{% url 'login' %}" method="POST">
+                {% csrf_token %}
+                <div class="super">ID </div><input name="username" type="text"><br/><br/>
+                <div class="super">Password</div> <input name="password" type="password"><br/><br/>
+                <input id="loginButton" type="submit" value="로그인">
+            </form>
+          </div>
+        </div>
+
+        {% if error %}
+            {{ error }}
+        {% endif %}
+    </div>
+{% endblock %}

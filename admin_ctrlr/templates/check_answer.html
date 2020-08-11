@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <div class="container">
+        {% for answer in std_ans %}
+            {% if answer.questionNa != null %}
+                <h4>{{ answer.questionNa.question_content }}</h4>
+                <span><strong>주관식</strong> | {{ answer.questionNa.question_score }} 점 </span>
+                <p>정답: {{ answer.questionNa.ans }}</p>
+                <p>학생 답: {{ answer.qna_ans }}</p>
+            {% endif %}
+            {% if answer.questionMc != null %}
+                <h4>{{ answer.questionMc.question_content }}</h4>
+                <span><strong>주관식</strong> | {{ answer.questionMc.question_score }} 점 </span>
+                <p>정답: {{ answer.questionMc.cor_ans }}</p>
+                <p>학생 답: {{ answer.qmc_ans }}</p>
+            {% endif %}
+            <br>
+        {% endfor %}
+    </div>
+{% endblock %}
+

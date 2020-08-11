@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+    <div class="container">
+        <h1>응시완료 명단</h1>
+        <table class="table table-hover">
+            <tr >
+                <th>번호</th>
+                <th>이름</th>
+            </tr>
+            {% for tested_user in tested_users %}
+                <tr>
+                    <td>
+                        <a href="{% url 'student_answer' pk=test.pk sid=tested_user.user.id %}">{{ tested_user.user.username }}</a>
+                    </td>
+                    <td>
+                        {{tested_user.user.id}}
+                    </td>
+                </tr>
+            {% endfor %}
+        </table>
+        <h1>응시대기 명단</h1>
+        <table class="table table-hover">
+            <tr >
+                <th>번호</th>
+                <th>이름</th>
+            </tr>
+            {% for test_user in testUserList %}
+                {% if test_user.user.username not in already %}
+                    <tr>
+                        <td>
+                            {{ test_user.user.username }}
+                        </td>
+                        <td>
+                            {{test_user.user.id}}
+                        </td>
+                    </tr>
+                {% endif %}
+            {% endfor %}
+        </table>
+    </div>
+
+{% endblock %}

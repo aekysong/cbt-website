@@ -1,0 +1,94 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+    <div class="container">
+        <h3>{{ test.title }}</h3>
+        <div class="time"><strong>현재 시간</strong> <span id="ctime"></span> </div>
+        <div id="ViewTimer"></div>
+        <br>
+        <p>하단의 Submit the answer를 누르지 않을 경우 답안이 저장되지 않습니다.<br>
+            제한 시간에 유의하여 문제를 풀어주시기 바랍니다.</p>
+        <hr>
+
+        <form method="POST"> {% csrf_token %}
+            {% for questna in questnas %}
+                <h4>{{ forloop.counter }}. {{ questna }}</h4>
+                <span><strong>주관식</strong> | {{ questna.question_score }} 점 </span>
+                <br>
+                {% if questna %}
+                    <input type="text" name="na_std_ans" size="100">
+                {% endif %}
+                <br>
+                <br>
+                {#     student answer       #}
+            {% endfor %}
+            {% for questmc in questmcs %}
+                <h4>{{ forloop.counter }}. {{ questmc }}</h4>
+                <span><strong>주관식</strong> | {{ questmc.question_score }} 점 </span>
+                <br>
+                {% if questmc %}
+                    <input type="checkbox" name="mc_std_ans" value="ONE"> {{ questmc.ans1 }} <br>
+                    <input type="checkbox" name="mc_std_ans" value="TWO"> {{ questmc.ans2 }} <br>
+                    <input type="checkbox" name="mc_std_ans" value="THR"> {{ questmc.ans3 }} <br>
+                    <input type="checkbox" name="mc_std_ans" value="FOU"> {{ questmc.ans4 }} <br>
+                    <input type="checkbox" name="mc_std_ans" value="FIV"> {{ questmc.ans5 }} <br>
+                {% endif %}
+                <br>
+                <br>
+                {#     student answer       #}
+            {% endfor %}
+            <input type="submit" value="Submit the answer">
+        </form>
+
+    </div>
+
+    <script language="JavaScript">
+
+        var SetTime = {{ timelimit }} * 3600;		// 최초 설정 시간(기본 : 초)
+        {#        #}
+
+        function msg_time() {	// 1초씩 카운트
+
+            min = (SetTime%3600);
+            m = Math.floor(SetTime/3600) + "시 " + Math.floor(min / 60) + "분 " + (SetTime % 60) + "초";	// 남은 시간 계산
+
+            var msg = "<strong>남은 시간</strong>은 <font color='red'>" + m + "</font> 입니다.";
+
+            document.all.ViewTimer.innerHTML = msg;		// div 영역에 보여줌
+
+            SetTime--;					// 1초씩 감소
+
+            if (SetTime < 0) {			// 시간이 종료 되었으면..
+
+                clearInterval(tid);		// 타이머 해제
+                alert("시험이 종료되었습니다.");
+                window.location.href = '/';
+
+            }
+
+        }
+
+        window.onload = function TimerStart(){ tid=setInterval('msg_time()',1000) }; //창이 열리면 카운트 시작
+
+        function clock(){
+            var d = new Date();
+            var currentDate = d.getFullYear() + "년 " + (d.getMonth() +1) + "월 " + d.getDate() + "일 ";
+            var currentTime = d.getHours() + "시 " + d.getMinutes() + "분 " + d.getSeconds() + "초";
+            document.getElementById("ctime").innerHTML = currentDate+currentTime;
+        }
+        function init(){
+            clock();
+            setInterval(clock,1000);
+        }
+        init();
+    </script>
+
+
+
+
+    <script type ="text/javascript">
+
+    </script>
+
+{% endblock %}

@@ -1,0 +1,70 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <div class="container">
+
+        <h3>{{ test.title }}</h3>
+        <hr>
+        <p><strong>출제자 </strong>{{ test.professor }} <br>
+            <strong>시험 시간 </strong>{{ test.test_time }} <br>
+            <strong>시험 진행 시간 </strong>{{ test.test_period }} <br>
+            <strong>총점 </strong>{{ test.total_score }} 점</p><br>
+        <h3>{{ std.username }} 답안 수동채점</h3>
+        <form method="POST">
+            {% csrf_token %}
+            <table class="table table-hover">
+                <tr>
+                    <td>
+                        문제명
+                    </td>
+                    <td>
+                        문제유형
+                    </td>
+                    <td>
+                        배점
+                    </td>
+                    <td>
+                        정답
+                    </td>
+                    <td>
+                        학생 답
+                    </td>
+                    <td>
+                        정답 유무
+                    </td>
+                </tr>
+                {% for answer in std_ans %}
+                    {% if answer.questionNa != null %}
+                        <tr>
+                            <td>{{ answer.questionNa.question_content }}</td>
+                            <td><strong>주관식</strong></td>
+                            <td>{{ answer.questionNa.question_score }} 점</td>
+                            <td>{{ answer.questionNa.ans }}</td>
+                            <td>{{ answer.qna_ans }}</td>
+                            <td>
+                                <input type="checkbox" name="na_correct" value="O"> O
+                                <input type="checkbox" name="na_correct" value="X"> X
+                            </td>
+                        </tr>
+                    {% endif %}
+                    {% if answer.questionMc != null %}
+                        <tr>
+                            <td>{{ answer.questionMc.question_content }}</td>
+                            <td><strong>객관식</strong></td>
+                            <td>{{ answer.questionMc.question_score }} 점</td>
+                            <td>{{ answer.questionMc.cor_ans }}</td>
+                            <td>{{ answer.qmc_ans }}</td>
+                            <td>
+                                <input type="checkbox" name="mc_correct" value="O"> O
+                                <input type="checkbox" name="mc_correct" value="O"> X
+                            </td>
+                        </tr>
+                    {% endif %}
+                {% endfor %}
+
+            </table>
+            <input type="submit" value="Save">
+        </form>
+    </div>
+{% endblock %}
+

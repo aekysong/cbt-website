@@ -1,0 +1,73 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+    <div class="container">
+
+        <div class="wrapper">
+            <h3>{{ subuser.id }} |
+                {{ subuser.username }}</h3>
+            <div class="table">
+                <div class="row header">
+                    <div class="cell">
+                        회원 유형
+                    </div>
+                    <div class="cell">
+                        승인 여부
+                    </div>
+                    <div class="cell">
+                        가입 일시
+                    </div>
+                    <div class="cell">
+                        최종 로그인
+                    </div>
+                    {% if subuser.profile.type == "professor" or subuser.profile.type == "PRF" %}
+                        <div class="cell">
+                            승인 일시
+                        </div>
+                    {% endif %}
+                </div>
+
+                <div class="row">
+                    <div class="cell" data-title="회원 유형">
+                        {{ subuser.profile.type }}
+                    </div>
+                    <div class="cell" data-title="승인 여부">
+                        {{ subuser.profile.accept }}
+                    </div>
+                    <div class="cell" data-title="가입 일시">
+                        {{ subuser.date_joined }}
+                    </div>
+                    <div class="cell" data-title="최종 로그인">
+                        {{ subuser.last_login }}
+                    </div>
+                    <div class="cell" data-title="최종 로그인">
+                        {% if subuser.profile.type == "professor" or subuser.profile.type == "PRF" %}
+
+                            {% if subuser.profile.accept == False %}
+                                아직 승인되지 않은 교수자입니다
+                            {% else %}
+                                {{ subuser.profile.accept_date }}
+                            {% endif %}
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <form method='POST'>{% csrf_token %}
+        <button name='delete_user' type="submit">Delete</button>
+    </form>
+
+    <hr>
+
+    {% if subuser.profile.type == 'professor' or subuser.profile.type == "PRF" %}
+        <form method='POST'>{% csrf_token %}
+            <button name='accept_prof' type="submit">Accept</button>
+        </form>
+    {% endif %}
+
+    </div>
+
+{% endblock %}

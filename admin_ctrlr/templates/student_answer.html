@@ -1,0 +1,99 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+    <div class="container">
+
+        <h3>{{ test.title }}</h3>
+        <hr>
+        <p><strong>출제자 </strong>{{ test.professor }} <br>
+            <strong>시험 시간 </strong>{{ test.test_time }} <br>
+            <strong>시험 진행 시간 </strong>{{ test.test_period }} <br>
+            <strong>총점 </strong>{{ test.total_score }} 점</p><br>
+        <h3>{{ std.username }} 님의 결과</h3>
+        {% if test.auto_score %}
+            <p>자동 채점 결과는 다음과 같습니다.</p>
+        {% else %}
+            <p>수동 채점 결과는 다음과 같습니다.<br>
+                점수가 나오지 않는 것은 아직 교수자가 채점을 진행하지 않은 경우입니다.</p>
+        {% endif %}
+        {% if user.profile.type == "professor" or user.profile.type == "PRF" %}
+            {% if test.auto_score == False %}
+                {% if numcount == 0 %}
+                    <strong>채점 여부 </strong><a href="{% url 'hand_score' pk=test.pk sid=std.id %}">수동 채점하기</a>
+                {% else %}
+                    <p><strong>채점 여부 </strong>채점 완료</p>
+                {% endif %}
+            {% endif %}
+        {% endif %}
+        <table class="table table-hover">
+            <tr>
+                <td>
+                    문제명
+                </td>
+                <td>
+                    문제유형
+                </td>
+                <td>
+                    배점
+                </td>
+                <td>
+                    정답
+                </td>
+                <td>
+                    학생 답
+                </td>
+                <td>
+                    정답 유무
+                </td>
+            </tr>
+            {% for answer in std_ans %}
+                {% if answer.questionNa != null %}
+                    <tr>
+                        <td>{{ answer.questionNa.question_content }}</td>
+                        <td><strong>주관식</strong></td>
+                        <td>{{ answer.questionNa.question_score }} 점</td>
+                        <td>{{ answer.questionNa.ans }}</td>
+                        <td>{{ answer.qna_ans }}</td>
+                        <td>
+                            {% for s in score %}
+                                {% if s.questionNa_id == answer.questionNa_id %}
+                                    {% if s.ox %}
+                                        O
+                                    {% else %}
+                                        X
+                                    {% endif %}
+                                {% endif %}
+                            {% endfor %}
+                        </td>
+                    </tr>
+                {% endif %}
+                {% if answer.questionMc != null %}
+                    <tr>
+                        <td>{{ answer.questionMc.question_content }}</td>
+                        <td><strong>객관식</strong></td>
+                        <td>{{ answer.questionMc.question_score }} 점</td>
+                        <td>{{ answer.questionMc.cor_ans }}</td>
+                        <td>{{ answer.qmc_ans }}</td>
+                        <td>
+                            {% for s in score %}
+                                {% if s.questionMc_id == answer.questionMc_id %}
+                                    {% if s.ox %}
+                                        O
+                                    {% else %}
+                                        X
+                                    {% endif %}
+                                {% endif %}
+                            {% endfor %}
+                        </td>
+                    </tr>
+                {% endif %}
+            {% endfor %}
+
+        </table>
+        <strong>최종 점수 : </strong>
+        {{count}}
+    </div>
+
+
+{% endblock %}

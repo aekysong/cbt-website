@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <div class="container">
+        <form method="POST" class="test-form">{% csrf_token %}
+            {{ form.as_p }}
+
+             <p><strong>응시자 선택</strong></p><br/>
+            <div class="student_check">
+
+                {% for student in stds1 %}
+                <div class="student_check_in">
+                    <input class="check" type="checkbox" name="testlist" value="{{ student.user.username }}"> {{ student.user.username }} <br>
+                </div>
+                {% endfor %}
+
+                {% for student in stds2 %}
+                <div class="student_check_in">
+                    <input class="check" type="checkbox" name="testlist" value="{{ student.user.username }}"> {{ student.user.username }} <br>
+                </div>
+                {% endfor %}
+
+            </div>
+
+            <button type="submit" class="save btn btn-default">Update</button>
+        </form>
+    </div>
+{% endblock %}
+

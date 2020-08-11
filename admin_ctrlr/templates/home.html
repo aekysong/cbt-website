@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+    <div class="container">
+
+        {% if user.is_authenticated %}
+            <div class="container">
+                <form id="search_form" action="{% url 'search' %}" method="GET">
+                    <div class="col-lg-6">
+                        <div class="input-group">
+                            <input type="text" class="form-control" placeholder="검색어를 입력하세요" name="q" value="{{ q }}">
+                            <span class="input-group-btn">
+                                <span class="icon-input-btn">
+                                  <input type="submit" class="btn btn-default" value="검색">
+                                </span>
+                        </div><!-- /input-group -->
+                    </div><!-- /.col-lg-6 -->
+                </form>
+
+                <select id="sort_select"  onchange="location = this.value;">
+                    <option class="sort-date" value="/" selected>정렬방식</option>
+                    <option class="sort-date" value="?sort=date">생성일시순</option>
+                    <option class="sort-title" value="?sort=title">제목순</option>
+                </select>
+
+            </div>
+
+
+
+            <div class="page-header">
+                <h3>시험 목록</h3>
+            </div>
+            {% for test in tests %}
+                <div class="test">
+                    <table class="test_table">
+                        <tr>
+                            <th class="test_title" rowspan="3"><a class="test_table_title" href="{% url 'test_detail' pk=test.pk %}">{{ test.title }}</a></th>
+                            <th class="test_attribute"><strong>출제자 </strong></th>
+                            <th class="test_attribute"><strong>시험 시간 </strong></th>
+                            <th class="test_attribute"><strong>총점 </strong></th>
+                        </tr>
+                        <tr>
+                            <td>{{ test.professor }}</td>
+                            <td>{{ test.test_time }}</td>
+                            <td>{{ test.total_score }}점</td>
+                        </tr>
+
+                    </table>
+                </div>
+            {% endfor %}
+            </div>
+        {% else %}
+            <h1>SKKU Online Examination Website</h1>
+            <p style="text-align: center">회원가입은 우측 상단에서 가능합니다</p>
+        {% endif %}
+{% endblock %}

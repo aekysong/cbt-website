@@ -1,0 +1,237 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+    <div class="container">
+        <div class="container">
+            <h3>{{ test.title }}</h3>
+            <hr>
+
+            <div class="wrapper">
+                <div class="table">
+                    <div class="row header">
+                        <div class="cell">
+                            출제자
+                        </div>
+                        <div class="cell">
+                            시험 시간
+                        </div>
+                        <div class="cell">
+                            시험 진행 시간
+                        </div>
+                        <div class="cell">
+                            총점
+                        </div>
+                        <div class="cell">
+                            평균
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="cell" data-title="출제자">
+                            {{ test.professor }}
+                        </div>
+                        <div class="cell" data-title="시험 시간">
+                            {{ test.test_time }}
+                        </div>
+                        <div class="cell" data-title="시험 진행 시간">
+                            {{ test.test_period }}
+                        </div>
+                        <div class="cell" data-title="총점">
+                            {{ test.total_score }} 점
+                        </div>
+                        <div class="cell" data-title="평균">
+                            {{ average }} 점
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="wrapper">
+            <div class="table">
+                <div class="row header">
+                    <div class="cell">응시자 명단</div>
+                </div>
+                <div class="row">
+                    <div class="cell">
+                        {% for testlist_user in testlist %}
+                            <p style="text-align: center">{{ testlist_user.user.username }}</p>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        {% if user.profile.type == "manager" or user.profile.type == "MGR" %}
+
+            <div class="out">
+                <div class="in">
+                    <form method='POST'>{% csrf_token %}
+                        <button id="delete_testButton" name='delete_test' type="submit">시험 삭제하기</button>
+                    </form>
+                </div>
+            </div>
+
+            <a id="goto_test_attend" href="{% url 'test_attend' pk=test.pk %}">응시 현황 바로가기</a>
+
+
+            {% for Naquest in test.Naquests.all %}
+                <div class="Naquest">문제 유형: NA
+                    <div class="Nascore">문제 점수: {{ Naquest.question_score }}</div>
+                    <div class="Nacontent"> 문제 내용: {{ Naquest.question_content }}</div>
+                    <div class="Naanswer"> 답: {{ Naquest.ans }}</div>
+                    {% for key, value in qna_ratio_dict.items %}
+                        {% if key == Naquest.id %}
+                            <div> 문항별 오답비율 : {% widthratio value 1 100 %}% </div>
+                        {% else %}
+                            <div> 문항별 오답비율 : 0% </div>
+                        {% endif %}
+                    {% endfor %}
+                    <p>{{linebreaks}}</p>
+                </div>
+                <br>
+            {% empty %}
+                <p>주관식 문제가 없습니다</p>
+            {% endfor %}
+
+            {% for Mcquest in test.Mcquests.all %}
+                <div class="Mcquest">문제 유형: MC
+                    <div class="Mcscore">문제 점수: {{ Mcquest.question_score }}</div>
+                    <div class="Mccontent"> 문제 내용: {{ Mcquest.question_content }}</div>
+                    <div class="Mcanswer"> 답: {{ Mcquest.cor_ans }}</div>
+                    {% for key, value in qmc_ratio_dict.items %}
+                        {% if key == Mcquest.id %}
+                            <div> 문항별 오답비율 : {% widthratio value 1 100 %}% </div>
+                        {% else %}
+                            <div> 문항별 오답비율 : 0% </div>
+                        {% endif %}
+                    {% endfor %}
+                    <p>{{linebreaks}}</p>
+                </div>
+                <br>
+            {% empty %}
+                <p>객관식 문제가 없습니다</p>
+            {% endfor %}
+        {% endif %}
+
+        {% if user.profile.type == "student" or user.profile.type == "ST" %}
+            <div class="out">
+                <div class="in">
+                    <form method='POST'>{% csrf_token %}
+                        <button name='start_test' type="submit">시험 시작하기</button>
+                    </form>
+                </div>
+            </div>
+            {% if message %}
+                {{ message }}
+                {% if message == "이미 응시한 시험입니다" %}
+                    <p><a href="{% url 'student_answer' pk=test.pk sid=request.user.id %}">내 점수 확인하기</a></p>
+                {% endif %}
+            {% endif %}
+        {% endif %}
+
+        {% if user.profile.type == "professor" or user.profile.type == "PRF" %}
+            {% if user.profile.accept == True %}
+                <div class="container">
+                <form method='POST'>{% csrf_token %}
+                        <button class="btn btn-default" name='delete_test' type="submit">시험 삭제하기</button>
+                    </form>
+                    <form method='POST'>{% csrf_token %}
+                        <button class="btn btn-default" name='copy_test' type="submit">시험 복사하기</button>
+                    </form>
+                    <a class="btn btn-default" href="{% url 'test_attend' pk=test.pk %}">응시 현황 바로가기</a><br>
+                    <a class="btn btn-default" href="{% url 'test_modify' pk=test.pk %}">시험 수정하기</a><br>
+                    <hr>
+                    <a class="btn btn-default" href="{% url 'add_Naquest_to_test' pk=test.pk %}">Add NA Test</a>
+                    <a class="btn btn-default" href="{% url 'add_Mcquest_to_test' pk=test.pk %}">Add MC Test</a>
+                    {% for Naquest in test.Naquests.all %}
+                        </div>
+                        <div class="wrapper">
+                            <div class="table">
+                                <div class="row blue">
+                                    <div class="cell">
+                                        유형
+                                    </div>
+                                    <div class="cell">
+                                        점수
+                                    </div>
+                                    <div class="cell">
+                                        문제
+                                    </div>
+                                    <div class="cell">
+                                        수정
+                                    </div>
+
+                                </div>
+
+                                <div class="row">
+                                    <div class="cell" data-title="문제 유형">
+                                        NA
+                                    </div>
+                                    <div class="cell" data-title="문제 점수">
+                                        {{ Naquest.question_score }}
+                                    </div>
+                                    <div class="cell" data-title="문제 내용">
+                                        {{ Naquest.question_content }}
+                                    </div>
+                                    <div class="cell" data-title="수정 ">
+                                        <a class="collectButton" class="btn btn-default" href="{% url 'Naquest_modify' pk=test.pk qid=Naquest.id %}">문제 수정</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <p>{{linebreaks}}</p>
+                        <br>
+                    {% empty %}
+                        <p style="text-align: center;">주관식 문제가 없습니다</p>
+                    {% endfor %}
+                {% for Mcquest in test.Mcquests.all %}
+                    <div class="wrapper">
+                        <div class="table">
+                            <div class="row blue">
+                                <div class="cell">
+                                    유형
+                                </div>
+                                <div class="cell">
+                                    점수
+                                </div>
+                                <div class="cell">
+                                    문제
+                                </div>
+                                <div class="cell">
+                                    수정
+                                </div>
+
+                            </div>
+
+                            <div class="row">
+                                <div class="cell" data-title="문제 유형">
+                                    MC
+                                </div>
+                                <div class="cell" data-title="문제 점수">
+                                    {{ Mcquest.question_score }}
+                                </div>
+                                <div class="cell" data-title="문제 내용">
+                                    {{ Mcquest.question_content }}
+                                </div>
+                                <div class="cell" data-title="수정 ">
+                                    <a class="collectButton" class="btn btn-default" href="{% url 'Mcquest_modify' pk=test.pk qid=Mcquest.id %}">문제 수정</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <br>
+                {% empty %}
+                    <p style="text-align: center;">객관식 문제가 없습니다</p>
+                {% endfor %}
+                </div>
+            {% endif %}
+        {% endif %}
+
+    </div>
+
+
+
+{% endblock %}

@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="out">
+    <div class="in">
+        <div class="container">
+          <div class="out">
+              <div class="in">
+                  <table id="manage_users_table">
+                      <tr>
+                          <th>No</th>
+                          <th>ID</th>
+                          <th>Type</th>
+                          <th>가입일시</th>
+                      </tr>
+                      {% for user in users %}
+                          {% if user.profile.type != '' %}
+                              <tr>
+                                  <div class="user">
+                                      <td class="user_id">{{ user.id }}</td>
+                                      <td class="user_name"><a href="{% url 'user_detail' pk=user.pk %}">{{ user.username }}</a></td>
+                                      <td class="user_type">{{ user.profile.type }}</td>
+                                      <td class="user_date">{{ user.date_joined }}</td>
+                                  </div>
+                              </tr>
+                          {% endif %}
+                      {% endfor %}
+                  </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

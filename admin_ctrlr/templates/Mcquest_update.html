@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h1>Modify MC Quest</h1>
+<div class="create_test">
+<form method="POST" class="quest-form">{% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit" class="save btn btn-default">Update</button>
+
+</form>
+</div>
+{% endblock %}
